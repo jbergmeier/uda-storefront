@@ -1,0 +1,16 @@
+{
+    "dev": {
+      "driver": "pg",
+      "host": "127.0.0.1",
+      "database": "bookstore_dev",
+      "user": "bookstore_user",
+      "password": "udacity"
+    },
+    "test": {
+      "driver": "pg",
+      "host": "127.0.0.1",
+      "database": "bookstore_test",
+      "user": "bookstore_user",
+      "password": "udacity"
+    }
+  }
