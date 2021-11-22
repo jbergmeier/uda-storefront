@@ -1,0 +1,12 @@
+# To Do List
+- [ ] README Documentation
+- [ ] REQUIREMENTS Documentation
+- [ ] Database Schema
+  - [ ] Products
+  - [ ] Users
+  - [ ] Orders
+  - [ ] Orderlines
+- [ ] API Endpoints
+- [ ] Jasmine Tests (Current Issue with Database)
+- [ ] Implement JWT AUTH
+- [ ] BCRYPT for password hashing with salt

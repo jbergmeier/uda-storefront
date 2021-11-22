@@ -10,6 +10,7 @@
     "test": "ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop test",
     "test-mac": "export ENV=test && db-migrate --env test up && jasmine && db-migrate db:drop test",
     "test-win": "set ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop test",
+    "test-win2": "set ENV=test&& db-migrate db:create bookstore_test && db-migrate --env test up && npm run jasmine && db-migrate db:drop bookstore_test",
     "build": "npx tsc",
     "lint": "eslint . --ext .ts",
     "prettier-ts": "prettier --config .prettierrc 'src/**/*.ts' --write",
