@@ -7,8 +7,8 @@ export type Order = {
 }
 
 export type OrderLine = {
-    id:number,
-    order_id: number,
+    id?:number,
+    order_id?: number,
     product_id:number,
     quantity:number
 } []
@@ -41,6 +41,7 @@ export class OrderStore {
         try {
             const sql = 'INSERT INTO orders (order_status, users_id) VALUES($1, $2)  RETURNING *'
             const conn = await Client.connect();
+            console.log("Usersid: " + o.users_id)
             const result = await conn.query(sql, [o.order_status, o.users_id])
             const orders = result.rows[0].id
             for(let i=0; i< ol.length; i++){

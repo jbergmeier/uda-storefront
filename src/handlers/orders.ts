@@ -1,6 +1,9 @@
 import { urlencoded } from 'body-parser';
 import express from 'express'
 import { Order, OrderStore } from '../models/orders';
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+dotenv.config();
 
 const store = new OrderStore();
 
@@ -14,11 +17,22 @@ const index = async (req: express.Request, res: express.Response) => {
 }
 
 const create = async (req: express.Request, res: express.Response) => {
+    try {
+        const authorizationHeader = req.headers.authorization!
+        const token = authorizationHeader.split(' ')[1]
+        jwt.verify(token, process.env.TOKEN_SECRET!)
+    } catch(err) {
+        res.status(401)
+        res.json('Access denied, invalid token')
+        return
+    }
     try {   
         const orderStatus = req.body.order_status;
         const users_id = req.body.users_id;
         const orderlines = req.body.orderlines;
-        
+        if(!users_id) throw Error;
+        if(!orderStatus) throw Error;
+        if(!orderlines) throw Error;
         const order = {
             order_status: orderStatus,
             users_id: users_id
@@ -33,6 +47,15 @@ const create = async (req: express.Request, res: express.Response) => {
 }
 
 const del = async (req: express.Request, res: express.Response) => {
+    try {
+        const authorizationHeader = req.headers.authorization!
+        const token = authorizationHeader.split(' ')[1]
+        jwt.verify(token, process.env.TOKEN_SECRET!)
+    } catch(err) {
+        res.status(401)
+        res.json('Access denied, invalid token')
+        return
+    }
     try {   
         if(!req.body.id) throw Error;
 
@@ -45,6 +68,15 @@ const del = async (req: express.Request, res: express.Response) => {
 }
 
 const show = async (req: express.Request, res: express.Response) => {
+    try {
+        const authorizationHeader = req.headers.authorization!
+        const token = authorizationHeader.split(' ')[1]
+        jwt.verify(token, process.env.TOKEN_SECRET!)
+    } catch(err) {
+        res.status(401)
+        res.json('Access denied, invalid token')
+        return
+    }
     try {
         const order = await store.show(parseInt(req.params.id));
         res.status(200).json(order)

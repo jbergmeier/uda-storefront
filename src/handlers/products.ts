@@ -1,6 +1,8 @@
 import express from 'express'
 import {Product, ProductStore} from '../models/products'
-
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+dotenv.config();
 const store = new ProductStore();
 
 const index = async (req: express.Request, res: express.Response) => {
@@ -13,6 +15,15 @@ const index = async (req: express.Request, res: express.Response) => {
 }
 
 const create = async (req: express.Request, res: express.Response) => {
+    try {
+        const authorizationHeader = req.headers.authorization!
+        const token = authorizationHeader.split(' ')[1]
+        jwt.verify(token, process.env.TOKEN_SECRET!)
+    } catch(err) {
+        res.status(401)
+        res.json('Access denied, invalid token')
+        return
+    }
     try {   
         if(!req.body.name) throw Error;
                 
@@ -29,6 +40,15 @@ const create = async (req: express.Request, res: express.Response) => {
 }
 
 const del = async (req: express.Request, res: express.Response) => {
+    try {
+        const authorizationHeader = req.headers.authorization!
+        const token = authorizationHeader.split(' ')[1]
+        jwt.verify(token, process.env.TOKEN_SECRET!)
+    } catch(err) {
+        res.status(401)
+        res.json('Access denied, invalid token')
+        return
+    }
     try {   
         if(!req.body.id) throw Error;
 

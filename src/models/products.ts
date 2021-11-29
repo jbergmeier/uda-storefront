@@ -1,5 +1,4 @@
 import Client from '../database'
-import product_routes from '../handlers/products';
 
 export type Product = {
     id?: number,

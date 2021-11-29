@@ -1,5 +1,8 @@
 import express from 'express'
 import {User, UserStore} from '../models/users'
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+dotenv.config();
 
 const store = new UserStore();
 
@@ -25,8 +28,15 @@ const create = async (req: express.Request, res: express.Response) => {
             username: req.body.username,
             password_digest: req.body.password_digest
         }
-        const newUser = await store.create(user)
-        res.status(201).send(newUser)
+
+        try {
+            const newUser = await store.create(user)
+            var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET!);
+            res.json(token)
+        } catch (err) {
+            res.status(400)
+            res.json(err)
+        }
         
     } catch (err) {
         res.status(400).json(err)
@@ -61,12 +71,21 @@ const authenticate = async (req: express.Request, res: express.Response) => {
         if(!req.body.username) throw Error;
         if(!req.body.password) throw Error;
         
-        const authenticate = await store.authenticate(req.body.username, req.body.password)
-        if (authenticate == null){
-            res.status(404).send("Password not correct")
-            throw Error
+        // if (authenticate == null){
+        //     res.status(404).send("Password not correct")
+        //     throw Error
+        // }
+
+        //res.status(200).send(authenticate)
+
+        try {
+            const authenticate = await store.authenticate(req.body.username, req.body.password)
+            var token = jwt.sign({ authenticate }, process.env.TOKEN_SECRET!);
+            res.json(token)
+        } catch(error) {
+            res.status(401)
+            res.json({ error })
         }
-        res.status(200).send(authenticate)
         
     } catch (err) {
         res.status(400).json(err)

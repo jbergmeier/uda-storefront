@@ -35,10 +35,10 @@ export class UserStore {
             );
             const result = await conn.query(sql, [u.firstname, u.lastname, u.username, hash])
 
-            const product = result.rows[0]
+            const user = result.rows[0]
             conn.release();
 
-            return product;
+            return user;
 
         } catch (err) {
             throw new Error(`Could not add new user ${u.username}. Error: ${err}`)
