@@ -56,11 +56,29 @@ const show = async (req: express.Request, res: express.Response) => {
    
 }
 
+const authenticate = async (req: express.Request, res: express.Response) => {
+    try {   
+        if(!req.body.username) throw Error;
+        if(!req.body.password) throw Error;
+        
+        const authenticate = await store.authenticate(req.body.username, req.body.password)
+        if (authenticate == null){
+            res.status(404).send("Password not correct")
+            throw Error
+        }
+        res.status(200).send(authenticate)
+        
+    } catch (err) {
+        res.status(400).json(err)
+    }
+}
+
 const userRoutes = (app: express.Application) => {
     app.get('/users', index);
     app.get('/users/:id', show);
     app.post('/users', create);
     app.delete('/users', del);
+    app.post('/users/authenticate', authenticate);
 };
 
 export default userRoutes;
