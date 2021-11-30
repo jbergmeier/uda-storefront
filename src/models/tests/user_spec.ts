@@ -1,6 +1,10 @@
 import {User, UserStore} from '../users'
 import dotenv from "dotenv"
+import supertest from 'supertest';
+import app from '../../server';
+const request = supertest(app);
 dotenv.config()
+
 const userstore = new UserStore();
 
 describe("Storefront Testing",() => {
@@ -61,4 +65,24 @@ describe("Storefront DB Testing", () => {
         const user = await userstore.del(1); //tries to delete user with id 1
         expect(user).toBeTruthy
 });
+
+    it('create new user', async () => {
+      const response = await request.post('/users').send({
+        username: 'testuserAPI',
+        firstname: 'testuserAPIFirst',
+        lastname: 'testuserAPILast',
+        password_digest: 'testuserAPIpassword',
+      });
+      expect(response.status).toBe(200);
+    });
+
+    it('Index shows all users', async () => {
+      const response = await request.get('/users');
+      expect(response.status).toBe(200);
+    });
+
+    it('show test specified user', async () => {
+      const response = await request.get('/users/1');
+      expect(response.status).toBe(200);
+    });
 })

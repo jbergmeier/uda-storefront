@@ -1,5 +1,8 @@
 import {Product, ProductStore} from '../products'
 import dotenv from "dotenv"
+import supertest from 'supertest';
+import app from '../../server';
+const request = supertest(app);
 dotenv.config()
 const productStore = new ProductStore();
 
@@ -54,8 +57,26 @@ describe("Storefront DB Testing", () => {
 
   });
 
-  it('create method should delete a product', async () => {
-      const user = await productStore.del(1); //tries to delete user with id 1
-      expect(user).toBeTruthy
-});
+
+  it('show specific product', async () => {
+    const response = await request.get('/products/1');
+    expect(response.status).toBe(200);
+  });
+  it('Get all products back', async () => {
+    const response = await request.get('/products');
+    expect(response.status).toBe(200);
+  });
+
+  it('Unauth to create new product', async () => {
+    const response = await request.post('/products').send({
+      name: 'testproduct',
+      price: 100,
+    });
+    expect(response.status).toBe(401);
+  });
+
+//   it('create method should delete a product', async () => {
+//     const user = await productStore.del(1); //tries to delete user with id 1
+//     expect(user).toBeTruthy
+// });
 })
