@@ -94,4 +94,17 @@ export class OrderStore {
         }
        
     }
+
+    async ordersByUser(userid: number): Promise<Order[]> {
+        try {
+          const conn = await Client.connect();
+          const sql =
+            "SELECT * FROM orders where users_id = ($1) AND order_status not in ('done', 'rejected', 'cancled')";
+          const result = await conn.query(sql, [userid]);
+          conn.release;
+          return result.rows;
+        } catch (err) {
+          throw Error(`Error on showing the orders for this user, ${err}`);
+        }
+      }
 }

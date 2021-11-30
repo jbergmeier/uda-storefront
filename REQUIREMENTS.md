@@ -3,21 +3,66 @@ The company stakeholders want to create an online storefront to showcase their g
 
 These are the notes from a meeting with the frontend developer that describe what endpoints the API needs to supply, as well as data shapes the frontend and backend have agreed meet the requirements of the application. 
 ## API Endpoints
+Below you find the Endpoints, connection Type and if a body is necessary, a body sample. If token is required, the JWT token for an authenticated users has to be provided as Bearer Token in header. You can get one if you create a new user or use the users/authenticate endpoint to login. 
 #### Products
-- Index 
-- Show
-- Create [token required]
-- [OPTIONAL] Top 5 most popular products 
-- [OPTIONAL] Products by category (args: product category)
+- Index (Show all products)
+  - /products - GET
+- Show (Show specific product by id)
+  - /products/:id
+- Create [token required] (Create a new Product)
+  - /products - POST
+    - Body Sample: 
+        {
+            "name": "Harry Potter",
+            "price": 53.33
+        }
+- Delete (Delete an existing product)
+  - /products - DELETE
+    - Body Sample:
+        {
+            "id": 1
+        }
 
 #### Users
-- Index [token required]
-- Show [token required]
-- Create N[token required]
+- Index [token required] (Show all users)
+  - /users - GET
+- Show [token required] (Show details of one user)
+  -/users/:id - GET 
+- Create (create a new user) - gives back a JWT for further use
+  - /users - POST
+    - Body Sample: 
+        {
+            "username": "testuser",
+            "firstname": "testuserfirst",
+            "lastname": "testuserlast",
+            "password": "testpassword"
+        }
+- Authenticate (logs in a user) - gives back a JWT for furhter use
+    /users/authenticate - POST
+    - Body Sample: 
+        {
+            "username": "testuser",
+            "password": "testpassword"
+        }
 
 #### Orders
 - Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
+  - /orders/user/:id - GET
+- Create (Create new Order)
+  - /orders - POST
+  - Body Sample:
+        {
+            "order_status": "open",
+            "users_id": 1,
+            "orderlines": [{
+                "product_id": 1,
+                "quantity": 100
+            }]
+        }
+- Show (See specific order)
+  - /oders/:id - GET
+- Index (See all orders)
+  - /orders/ - GET
 
 ## Data Shapes
 Here you can find the Datamodel for this application. Headlines are the Table Names.

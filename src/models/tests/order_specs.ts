@@ -26,23 +26,29 @@ describe("Storefront DB Testing", () => {
     it('create method should add a user', async () => {
         
             const order = await orderstore.create({
-                order_status: "approved",
+                order_status: "open",
                 users_id: 1}, 
                 [{product_id: 10, quantity: 1}]);
-        expect(order.order_status).toMatch('approved');
+        expect(order.order_status).toMatch('open');
         }),
 
     it('index should return a list of orders', async () => {
         const result = await orderstore.index();
         console.log(result)
         expect(result).toContain(jasmine.objectContaining({
-         order_status: 'approved'
+         order_status: 'open'
          }));
       });
 
     it(' should return details of single order', async () => {
         const result = await orderstore.show(1);
-        expect(Object.keys(result.order_status)).toEqual('approved');
+        expect(Object.keys(result.order_status)).toEqual('open');
+
+    });
+
+    it(' should return details of single order for specific user', async () => {
+        const result = await orderstore.ordersByUser(1);
+        expect(Object.keys(result[0].order_status)).toEqual('open');
 
     });
 
